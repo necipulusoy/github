@@ -1,7 +1,8 @@
+# Git Workflow Exercises
 
-# Remote Git Repository Usage
+## Remote Git Repository Usage
 
-## Creating an Account
+### Creating an Account
 
 1. Go to one of the following:
     - Bitbucket: [bitbucket.org](https://bitbucket.org/)
@@ -10,22 +11,32 @@
 
 ---
 
-## Creating a Project and Repository
+### Creating a Project and Repository
 
 1. Create a project named `automation`.
 
 2. Create a repository named `egitim_demo` under the `automation` project.
 
-3. Explore the repository UI:
-    - Navigate to **Branches** via the left menu — notice only the default branch exists.
-    - Navigate to **Commits** via the left menu — it is empty since no files have been added yet.
+3. Add an initial file on the default branch so the repository has its first commit:
+    - Go to **Source** (or **Files**) → **Add file**
+    - File name: `README.md`
+    - Content:
+        ```md
+        # egitim_demo
+        ```
+    - Commit message: `initial commit`
+    - Commit directly to the default branch (`main` or `master`).
 
-4. Create a new branch named `dev` via the UI:
+4. Explore the repository UI:
+    - Navigate to **Branches** via the left menu — notice the default branch now exists.
+    - Navigate to **Commits** via the left menu — confirm the initial commit is visible.
+
+5. Create a new branch named `dev` via the UI:
     - Click **Branches** → **Create branch**
     - Branch name: `dev`
-    - Branch from: `main` (or `master`)
+    - Branch from: the default branch (`main` or `master`)
 
-5. Add a file named `deployment.yaml` to the `dev` branch via the UI:
+6. Add a file named `deployment.yaml` to the `dev` branch via the UI:
     - Go to **Source** → select the `dev` branch → click **Add file**
     - File name: `deployment.yaml`
     - Content:
@@ -55,11 +66,11 @@
     - Commit message: `add initial deployment.yaml`
     - Commit directly to `dev` branch.
 
-6. Verify the commit appeared under **Commits**.
+7. Verify the commit appeared under **Commits**.
 
-7. Compare branches:
+8. Compare branches:
     - In `egitim_demo`, go to **Branches** (left menu) → click the three dots (`...`) next to a branch → **More options** → **Compare branches**
-    - Select `dev` vs `main` to see the diff
+    - Select `dev` vs the default branch to see the diff
 
 9. Manage notifications:
     - **Bitbucket:** Go to **Source** → three dots menu → **Manage notifications**
@@ -84,20 +95,20 @@
             | Filter | `A specific team project` → `automation` |
             | Filter criteria — Field | `Branches updated` |
             | Filter criteria — Operator | `Contains` |
-            | Filter criteria — Value | `main` |
+            | Filter criteria — Value | your default branch name (for example `main`) |
         - Click **Finish** to save.
         - Make a commit to the `dev` branch → no email arrives (filter excludes it).
-        - Make a commit to the `main` branch (e.g., edit `README.md` via UI) → email arrives.
+        - Make a commit to the default branch (e.g., edit `README.md` via UI) → email arrives.
         - This demonstrates how filter criteria control which events trigger a notification.
 
 10. Explore the `demo_app` repository (pre-created for demo purposes):
     - Show commit history under **Commits**.
-    - Add a new file named `deployment.yaml` via the UI with the same content as step 5.
+    - Add a new file named `deployment.yaml` via the UI with the same content as step 6.
     - Show all commits across all branches via **Commits** → **All branches**.
 
 ---
 
-## Pull Request Workflow
+### Pull Request Workflow
 
 > Goal: clone the repo, make a change on a feature branch, push it, and open a pull request.
 
@@ -157,11 +168,11 @@
 
 ---
 
-# Working with Team & Resolve Conflict
+## Team Workflow and Conflict Resolution
 
-> Scenario: Ali and Veli work on the same repository. They each have separate tasks but both need to edit the shared `Dockerfile`. This will cause a conflict that must be resolved.
+> Scenario: Ali and Veli both branch from the same `dev` commit. Ali merges first. Veli continues on the older base, so his pull request later conflicts with `Dockerfile`.
 
-## Setup (before Ali and Veli start)
+### Setup (before Ali and Veli start)
 
 1. In the remote repository UI, create a `Dockerfile` in the `dev` branch:
     - Go to **Source** → select `dev` branch → **Add file**
@@ -175,22 +186,27 @@
         ```
     - Commit message: `add initial Dockerfile`
 
-## Ali's Steps
+2. If you are doing this alone, use two separate folders or terminals before merging anything:
+    - one folder for Ali
+    - one folder for Veli
+    - create Veli's branch before merging Ali's pull request
 
-2. Clone the repository:
+### Ali's Steps
+
+3. Clone the repository:
     ```bash
     git clone <repo-url>
     cd egitim_demo
     ```
 
-3. Switch to `dev` and create Ali's feature branch:
+4. Switch to `dev` and create Ali's feature branch:
     ```bash
     git checkout dev
     git pull
     git checkout -b feature/ali
     ```
 
-4. Create `deployment-ali.yaml`:
+5. Create `deployment-ali.yaml`:
     ```yaml
     apiVersion: apps/v1
     kind: Deployment
@@ -215,7 +231,7 @@
             - containerPort: 80
     ```
 
-5. Edit `Dockerfile` — change the last line:
+6. Edit `Dockerfile` — change the last line:
     ```dockerfile
     FROM alpine:latest
     COPY . /app
@@ -223,22 +239,22 @@
     CMD ["echo", "Hello, Ali!"]
     ```
 
-6. Commit and push:
+7. Commit and push:
     ```bash
     git add deployment-ali.yaml Dockerfile
     git commit -m "add ali deployment and update Dockerfile"
     git push --set-upstream origin feature/ali
     ```
 
-7. In the UI: create a pull request from `feature/ali` → `dev`, then merge it.
+- Do not merge Ali's pull request yet. First create Veli's branch from the old `dev` state.
 
 ---
 
-## Veli's Steps
+### Veli's Steps
 
-> Veli starts at the same time as Ali — he does **not** pull before starting, so he is unaware of Ali's `Dockerfile` change.
+> Veli starts from the same original `dev` commit as Ali. He does **not** pull again after Ali merges, so he is unaware of Ali's `Dockerfile` change.
 
-8. Clone the repository (or use a separate folder):
+8. Before Ali's pull request is merged, clone the repository (or use a separate folder):
     ```bash
     git clone <repo-url> egitim_demo_veli
     cd egitim_demo_veli
@@ -286,12 +302,15 @@
     git push --set-upstream origin feature/veli
     ```
 
-12. In the UI: create a pull request from `feature/veli` → `dev`.
+12. Now merge Ali's pull request first:
+    - In the UI: create a pull request from `feature/ali` → `dev`, then merge it.
+
+13. Create or refresh Veli's pull request from `feature/veli` → `dev`.
     - You will see: **`This pull request can't be merged`** — because `Dockerfile` was already changed by Ali.
 
-## Resolve the Conflict (Veli)
+### Resolve the Conflict (Veli)
 
-13. Pull the latest `dev` into Veli's branch and merge:
+14. Pull the latest `dev` into Veli's branch and merge:
     ```bash
     git checkout dev
     git pull
@@ -300,7 +319,7 @@
     ```
     - Git will report a conflict in `Dockerfile`.
 
-14. Open `Dockerfile` — you will see conflict markers:
+15. Open `Dockerfile` — you will see conflict markers:
     ```
     <<<<<<< HEAD
     CMD ["echo", "Hello, Veli!"]
@@ -317,52 +336,53 @@
     CMD ["echo", "Hello, Veli!"]
     ```
 
-15. Stage the resolved file and commit:
+16. Stage the resolved file and commit:
     ```bash
     git add Dockerfile
     git commit -m "resolve merge conflict in Dockerfile"
     git push
     ```
 
-16. In the UI: the PR is now mergeable — click **Merge**.
+17. In the UI: the PR is now mergeable — click **Merge**.
 
 ---
 
-# Pushing a Local Repository to Remote
+## Pushing a Local Repository to Remote
 
 > Goal: initialize a repo locally and push it to Bitbucket/Azure DevOps for the first time (no remote repo was cloned).
 
-## Prerequisites
+### Prerequisites
 - You have a Bitbucket or Azure DevOps account.
 - You have created an empty repository on Bitbucket/Azure DevOps named `from_local_demo` (no README, no `.gitignore` — keep it empty).
 
-## Step 1: Configure Your Identity
+### Step 1: Configure Your Identity
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "your_email@example.com"
 ```
 
-## Step 2: Create a Local Repository
+### Step 2: Create a Local Repository
 ```bash
-mkdir from_local && cd from_local
+mkdir from_local_demo && cd from_local_demo
 git init
-touch README.md 
+touch README.md
 git add README.md
 git commit -m "Added README.md"
 git checkout -b dev
 git branch
 ```
 
-### README.md — Markdown Basics
+#### README.md — Markdown Basics
 
-Open `README.md` and add the following content to explore common Markdown formatting:
+Open `README.md` and try the following examples one by one.
 
-```markdown
+The full content to paste into `README.md`:
+
+````
 # Project Title
 
 ## Description
-This is a **bold** word and this is *italic*.
-You can also combine them: ***bold and italic***.
+This is **bold**, this is *italic*, this is ***bold and italic***.
 
 ## Features
 - Feature one
@@ -372,32 +392,26 @@ You can also combine them: ***bold and italic***.
 ## Numbered List
 1. First step
 2. Second step
-3. Third step
 
-## Code Example
-Inline code: `print('hello world')`
-
-Code block:
-```python
-print('hello world')
-```
+## Inline Code
+Inline: `print('hello world')`
 
 ## Link and Image
 [Google](https://www.google.com)
-![Alt text](https://via.placeholder.com/150)
+![Alt text](image.png)
 
 ## Table
-| Name  | Role     |
-|-------|----------|
-| Ali   | Dev      |
-| Veli  | QA       |
+| Name  | Role |
+|-------|------|
+| Ali   | Dev  |
+| Veli  | QA   |
 
 ## Blockquote
-> This is a quote or a note.
+> This is a note or a warning.
 
 ## Horizontal Rule
 ---
-```
+````
 
 Commit the updated README:
 ```bash
@@ -405,7 +419,7 @@ git add README.md
 git commit -m "add markdown examples to README"
 ```
 
-## Step 3: Add a File and Commit
+### Step 3: Add a File and Commit
 Create a file named `test.py`:
 ```python
 print('hello world')
@@ -417,11 +431,11 @@ git commit -m "initial commit: add test.py"
 git log
 ```
 
-## Step 3b: Make Additional Commits
+### Step 3b: Make Additional Commits
 Add a second line to `test.py`:
 ```python
 print('hello world')
-line-2
+print('line-2')
 ```
 
 ```bash
@@ -433,8 +447,8 @@ git log
 Add a third line to `test.py`:
 ```python
 print('hello world')
-line-2
-line-3
+print('line-2')
+print('line-3')
 ```
 
 ```bash
@@ -443,31 +457,33 @@ git commit -m "added line-3"
 git log
 ```
 
-## Step 4: Connect to the Remote Repository
+### Step 4: Connect to the Remote Repository
 ```bash
 git remote add origin https://<username>@bitbucket.org/<username>/from_local_demo.git
+# Azure DevOps example:
+# git remote add origin https://dev.azure.com/<org>/<project>/_git/from_local_demo
 git branch
 git branch -r
 git remote -v    # verify the remote URL is correct
 ```
 
-## Step 5: Push to Remote
+### Step 5: Push to Remote
 ```bash
 git push -u origin dev
 ```
 
 - Go to the Bitbucket/Azure DevOps repository UI.
-- Confirm the `dev` branch exists and the commit `initial commit: add test.py` appears.
+- Confirm the `dev` branch exists and the full commit history is visible, including the README and `test.py` commits.
 
 ---
 
-# git fetch vs git pull
+## git fetch vs git pull
 
 > **Key concept from the diagram:**
 > - `git fetch` — downloads changes from the Remote Git repository into your **local Git repository** only. Your working directory is untouched. You decide when (and whether) to merge.
 > - `git pull` — does `git fetch` **+** `git merge` in one step. It downloads and immediately applies changes to your working directory.
 
-## Setup: Simulate a Remote Change
+### Setup: Simulate a Remote Change
 
 Before starting, make a change directly in the remote repository UI (Bitbucket/Azure DevOps) so there is something to fetch:
 
@@ -483,7 +499,7 @@ Now the remote is **1 commit ahead** of your local repo.
 
 ---
 
-## Part 1: git fetch (download only, do NOT merge)
+### Part 1: git fetch (download only, do NOT merge)
 
 ```bash
 # Check current state — local is behind
@@ -511,7 +527,7 @@ git log --oneline          # now includes the remote commit
 
 ---
 
-## Part 2: git pull (fetch + merge in one step)
+### Part 2: git pull (fetch + merge in one step)
 
 First, simulate another remote change:
 1. Edit `test.py` in the UI again → add: `print('second remote line')`
@@ -525,7 +541,7 @@ git log --oneline   # remote commit is immediately visible in working directory
 
 ---
 
-## Summary
+### Summary
 
 | Command | Downloads to local repo | Merges into working directory |
 |---|---|---|
@@ -538,16 +554,16 @@ git log --oneline   # remote commit is immediately visible in working directory
 
 ---
 
-# Repository Settings for Bitbucket
+## Repository Settings for Bitbucket
 
 1. Go to **Repository settings** (left sidebar, bottom).
 2. Under **User and group access** → add a user and assign `read`, `write`, or `admin` permission.
 3. Under **Access keys** → add a deploy key (SSH public key) for read-only CI access.
-4. Under **Branch permissions** → set rules for the `main` branch:
-    - Require pull requests (no direct push).
-    - Require at least 1 approval before merging.
-    - Optionally require passing builds.
-5. Merge strategies (set per repository or per branch):
+4. Under **Branch restrictions** → set rules for the `main` branch (or a branch pattern):
+    - Restrict direct pushes.
+    - Control who can merge.
+    - Add merge checks such as minimum approvals, resolved tasks, or passing builds.
+5. Under **Pull request and merge settings** → choose the repository-level merge strategies users can select in pull requests:
 
 - **Merge commit** — preserves all commits, creates a merge commit:
     ```
@@ -572,29 +588,38 @@ git log --oneline   # remote commit is immediately visible in working directory
 
 ---
 
-# Repository Settings for Azure DevOps
+## Repository Settings for Azure DevOps
 
-> *(To be added)*
+1. Go to **Project Settings** → **Repositories**.
+2. Under **Repositories** → select a repository → configure permissions such as `Read`, `Contribute`, `Create branch`, and `Create tag`.
+3. Protect the default branch with **Policies** / **Branch policies**:
+    - Require a minimum number of reviewers.
+    - Check for linked work items.
+    - Check for comment resolution.
+    - Limit merge types.
+    - Add build validation or status checks when needed.
+4. Review repository-level settings such as the default branch and inherited policies.
+5. Under **Project Settings** → **Service hooks** → **Web Hooks**, send push or pull request events to external systems.
 
 ---
 
-# .gitignore
+## .gitignore
 
-## Introduction
+### Introduction
 `.gitignore` tells Git which files to never track. These are typically build artifacts, secrets, logs, and OS-generated files.
 
-## Step 1: Create and commit `.gitignore`
+### Step 1: Create and commit `.gitignore`
 ```bash
 touch .gitignore
 git add .gitignore
 git commit -m "add .gitignore"
 ```
 
-## Step 2: Basic rules — pattern types
+### Step 2: Basic rules — pattern types
 
 Open `.gitignore` and add the following rules one by one to see each in action:
 
-### Pattern 1: `*.log` — ignore by extension
+#### Pattern 1: `*.log` — ignore by extension
 Ignores any file ending with `.log`, regardless of name.
 ```
 *.log
@@ -607,7 +632,7 @@ git status --ignored   # app.log and error.log → ignored
 
 ---
 
-### Pattern 2: `logs/` — ignore a directory
+#### Pattern 2: `logs/` — ignore a directory
 Ignores the entire `logs/` folder and everything inside it.
 ```
 logs/
@@ -619,7 +644,7 @@ git status --ignored   # logs/ → ignored
 
 ---
 
-### Pattern 3: `**/debug.log` — ignore across all subdirectories
+#### Pattern 3: `**/debug.log` — ignore across all subdirectories
 `**` matches any number of nested folders. Useful when the same filename can appear anywhere in the project.
 ```
 **/debug.log
@@ -634,23 +659,28 @@ git status --ignored   # all three → ignored
 
 ---
 
-### Pattern 4: `!` — exception (un-ignore a specific file)
-Even if a directory is ignored, you can bring back a specific file with `!`.
+#### Pattern 4: `!` — exception (un-ignore a specific file)
+If you want to keep one file inside a folder trackable, ignore the folder contents, not the folder itself:
 ```
-logs/
+logs/*
 !logs/important.log
 ```
 ```bash
+mkdir -p logs
 touch logs/server.log
 touch logs/important.log
-git status --ignored
-# logs/server.log    → ignored
-# logs/important.log → NOT ignored (shows as untracked)
+git status --ignored --short
+# ?? logs/
+# !! logs/server.log
+git add logs/important.log
+git status --ignored --short
+# A  logs/important.log
+# !! logs/server.log
 ```
 
 ---
 
-## Step 3: Confirm non-ignored files still show up
+### Step 3: Confirm non-ignored files still show up
 ```bash
 touch main.py
 git status   # main.py appears as untracked — it is NOT in .gitignore
