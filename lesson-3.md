@@ -17,26 +17,31 @@
 
 2. Create a repository named `egitim_demo` under the `automation` project.
 
-3. Add an initial file on the default branch so the repository has its first commit:
-    - Go to **Source** (or **Files**) → **Add file**
-    - File name: `README.md`
-    - Content:
+3. Create the repository with a `README.md` file from the start:
+    - While creating the repository, enable **Initialize repository with a README**
+    - This creates the repository on the default branch (`main`) with an initial `README.md`
+
+4. Update `README.md` and create your first manual commit:
+    - Go to **Source** (or **Files**) and open `README.md`
+    - Click **Edit** and update the content:
         ```md
         # egitim_demo
+
+        Initial README update
         ```
-    - Commit message: `initial commit`
-    - Commit directly to the default branch (`main` or `master`).
+    - Commit message: `update README`
+    - Commit directly to the default branch (`main`)
 
-4. Explore the repository UI:
-    - Navigate to **Branches** via the left menu — notice the default branch now exists.
-    - Navigate to **Commits** via the left menu — confirm the initial commit is visible.
+5. Explore the repository UI:
+    - Navigate to **Branches** via the left menu and notice that the default branch now exists.
+    - Navigate to **Commits** via the left menu and confirm that both the automatic initial commit and your README update commit are visible.
 
-5. Create a new branch named `dev` via the UI:
+6. Create a new branch named `dev` via the UI:
     - Click **Branches** → **Create branch**
     - Branch name: `dev`
     - Branch from: the default branch (`main` or `master`)
 
-6. Add a file named `deployment.yaml` to the `dev` branch via the UI:
+7. Add a file named `deployment.yaml` to the `dev` branch via the UI:
     - Go to **Source** → select the `dev` branch → click **Add file**
     - File name: `deployment.yaml`
     - Content:
@@ -66,26 +71,16 @@
     - Commit message: `add initial deployment.yaml`
     - Commit directly to `dev` branch.
 
-7. Verify the commit appeared under **Commits**.
+8. Verify the commit appeared under **Commits**.
 
-8. Compare branches:
+9. Compare branches:
     - In `egitim_demo`, go to **Branches** (left menu) → click the three dots (`...`) next to a branch → **More options** → **Compare branches**
     - Select `dev` vs the default branch to see the diff
 
-9. Manage notifications:
+10. Manage notifications:
     - **Bitbucket:** Go to **Source** → three dots menu → **Manage notifications**
     - **Azure DevOps:** Go to **Project Settings** → **Notifications** → **New subscription**
-        - Create a subscription to get notified by email when a commit is pushed:
-            | Field | Value |
-            |---|---|
-            | Description | `A commit is pushed` |
-            | Subscriber | `automation Team` |
-            | Deliver to | `Custom email address` |
-            | Address | `your@email.com` |
-            | Filter | `A specific team project` → `automation` |
-        - Click **Finish** to save.
-        - Make a commit to the `dev` branch and verify that the notification email arrives.
-        - Now create a second subscription with a branch filter to show the difference:
+        - Create a subscription to get notified only when the default branch is updated:
             | Field | Value |
             |---|---|
             | Description | `A commit is pushed` |
@@ -97,13 +92,12 @@
             | Filter criteria — Operator | `Contains` |
             | Filter criteria — Value | your default branch name (for example `main`) |
         - Click **Finish** to save.
-        - Make a commit to the `dev` branch → no email arrives (filter excludes it).
-        - Make a commit to the default branch (e.g., edit `README.md` via UI) → email arrives.
-        - This demonstrates how filter criteria control which events trigger a notification.
+        - Make a commit to the `dev` branch and verify that no email arrives.
+        - Make a commit to the default branch (for example, edit `README.md` via the UI) and verify that the notification email arrives.
 
-10. Explore the `demo_app` repository (pre-created for demo purposes):
+11. Explore the `demo_app` repository (pre-created for demo purposes):
     - Show commit history under **Commits**.
-    - Add a new file named `deployment.yaml` via the UI with the same content as step 6.
+    - Add a new file named `deployment.yaml` via the UI with the same content as step 7.
     - Show all commits across all branches via **Commits** → **All branches**.
 
 ---
