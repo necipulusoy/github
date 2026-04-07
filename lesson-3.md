@@ -391,7 +391,7 @@ This is **bold**, this is *italic*, this is ***bold and italic***.
 Inline: `print('hello world')`
 
 ## Link and Image
-[Google](https://www.google.com)
+[Hepapi](https://hepapi.com/)
 ![Alt text](image.png)
 
 ## Table
