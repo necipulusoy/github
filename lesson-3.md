@@ -196,7 +196,7 @@
    cd egitim_demo
    ```
 
-4. Switch to `dev` and create Ali's feature branch:
+4. Switch to `dev` and create **Ali's feature branch**:
    ```bash
    git checkout dev
    git pull
@@ -243,7 +243,7 @@
    git push --set-upstream origin feature/ali
    ```
 
-- Do not merge Ali's pull request yet. First create Veli's branch from the old `dev` state.
+- Do not merge Ali's pull request yet. First create **Veli's branch** from the old `dev` state.
 
 ---
 
