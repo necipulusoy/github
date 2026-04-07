@@ -1119,9 +1119,10 @@ ssh -T git@ssh.dev.azure.com
 ```
 
 - Try again with ssh
+  
 ```bash
 rm -rf from_local_demo  from_local_demo
-
+```
 git clone git@ssh.dev.azure.com:v3/<organization>/<project>/<repo_name>
 
 
