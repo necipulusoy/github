@@ -467,6 +467,8 @@ git remote -v    # verify the remote URL is correct
 ### Step 5: Push to Remote
 ```bash
 git push -u origin dev
+
+git log 
 ```
 
 - Go to the Bitbucket/Azure DevOps repository UI.
