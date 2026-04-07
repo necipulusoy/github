@@ -250,8 +250,8 @@
 
 8. Before Ali's pull request is merged, clone the repository (or use a separate folder):
     ```bash
-    git clone <repo-url> egitim_demo_veli
-    cd egitim_demo_veli
+    git clone <repo-url> 
+    cd egitim_demo
     git checkout dev
     git checkout -b feature/veli
     ```
